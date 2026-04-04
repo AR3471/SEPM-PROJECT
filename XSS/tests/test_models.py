@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import pytest
 from models import DataStore, ScanResult, Session, Keystroke
-
+import auth
 
 class TestAddFinding:
     """Test DataStore.add_finding()."""
