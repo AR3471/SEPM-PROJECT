@@ -14,11 +14,12 @@ import auth
 class TestAddFinding:
     """Test DataStore.add_finding()."""
 
-    def setup_method(self):
-        self.store = DataStore()
-        self._orig = self.store.findings[:]
-        self.store.findings = []
-        self.store.stats["vulns"] = 0
+   def setup_method(self):
+    auth.init_db() 
+    self.store = DataStore()
+    self._orig = self.store.findings[:]
+    self.store.findings = []
+    self.store.stats["vulns"] = 0
 
     def teardown_method(self):
         self.store.findings = self._orig
