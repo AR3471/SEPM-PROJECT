@@ -1,12 +1,8 @@
 """
 XSS Toolkit — User authentication and database module.
 
-Uses SQLite for persistent user storage, werkzeug for
-secure password hashing, and Gmail SMTP for email verification.
-
-Configure via environment variables:
-    XSS_SMTP_EMAIL    — Your Gmail address
-    XSS_SMTP_PASSWORD — Gmail App Password (not your main password)
+Uses SQLite for persistent user storage and werkzeug for
+secure password hashing.
 """
 
 import os
@@ -16,26 +12,9 @@ import threading
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from config import config
+from db import _get_conn
 
 DB_PATH = config.DB_PATH
-
-# SMTP config — pulled from centralised config
-SMTP_EMAIL = config.SMTP_EMAIL
-SMTP_PASSWORD = config.SMTP_PASSWORD
-SMTP_HOST = config.SMTP_HOST
-SMTP_PORT = config.SMTP_PORT
-
-_local = threading.local()
-
-
-def _get_conn():
-    """Return a thread-local SQLite connection."""
-    if not hasattr(_local, "conn") or _local.conn is None:
-        _local.conn = sqlite3.connect(DB_PATH)
-        _local.conn.row_factory = sqlite3.Row
-        _local.conn.execute("PRAGMA journal_mode=WAL")
-        _local.conn.execute("PRAGMA foreign_keys=ON")
-    return _local.conn
 
 
 def init_db():
@@ -101,14 +80,6 @@ def init_db():
         )
         conn.commit()
         print("[+] Default admin created  →  admin / admin123")
-
-    # Print SMTP status
-    print("[!] Email verification disabled — SMTP support removed")
-
-
-def is_smtp_configured() -> bool:
-    """Always false because SMTP email verification is removed."""
-    return False
 
 
 def check_username_available(username: str) -> bool:

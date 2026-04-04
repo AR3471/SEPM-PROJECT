@@ -291,41 +291,39 @@ async function startScan() {
         return;
     }
 
-    await withLoading('scan-btn', async () => {
-        // Call backend
-        const result = await apiPost('/api/scan/start', {
-            url,
-            depth: state.depth,
-            threads: state.threads,
-            timeout: state.timeout,
-            waf: state.waf,
-            dom: state.dom,
-            template: state.template,
-        });
-
-        if (!result || result.error) {
-            showToast('⚠ ' + (result?.error || 'Failed to start scan'), 'warn');
-            return;
-        }
-
-        state.scanRunning = true;
-        state.lastLogIndex = 0;
-
-        document.getElementById('scan-btn').disabled = true;
-        document.getElementById('stop-btn').disabled = false;
-        document.getElementById('progress-section').style.display = '';
-        document.getElementById('live-findings').style.display = '';
-        document.getElementById('live-tbody').innerHTML = '';
-        document.getElementById('live-count').textContent = '0 found';
-        document.getElementById('status-dot').className = 'status-dot busy';
-        document.getElementById('status-label').textContent = 'Scanning…';
-
-        termLog(`[*] Target: ${url}`, 't-info');
-        addActivity(`[*] Scan started → ${url}`, 'info');
-
-        // Start polling for status
-        pollScanStatus();
+    // Call backend
+    const result = await apiPost('/api/scan/start', {
+        url,
+        depth: state.depth,
+        threads: state.threads,
+        timeout: state.timeout,
+        waf: state.waf,
+        dom: state.dom,
+        template: state.template,
     });
+
+    if (!result || result.error) {
+        showToast('⚠ ' + (result?.error || 'Failed to start scan'), 'warn');
+        return;
+    }
+
+    state.scanRunning = true;
+    state.lastLogIndex = 0;
+
+    document.getElementById('scan-btn').disabled = true;
+    document.getElementById('stop-btn').disabled = false;
+    document.getElementById('progress-section').style.display = '';
+    document.getElementById('live-findings').style.display = '';
+    document.getElementById('live-tbody').innerHTML = '';
+    document.getElementById('live-count').textContent = '0 found';
+    document.getElementById('status-dot').className = 'status-dot busy';
+    document.getElementById('status-label').textContent = 'Scanning…';
+
+    termLog(`[*] Target: ${url}`, 't-info');
+    addActivity(`[*] Scan started → ${url}`, 'info');
+
+    // Start polling for status
+    pollScanStatus();
 }
 
 function pollScanStatus() {

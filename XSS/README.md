@@ -178,6 +178,7 @@ python server.py
 |---------|---------|---------|
 | `flask` | ≥ 3.0.0 | Web framework and REST API |
 | `flask-cors` | ≥ 4.0.0 | Cross-Origin Resource Sharing |
+| `flask-limiter` | ≥ 3.5.0 | Rate limiting for auth endpoints |
 | `requests` | ≥ 2.31.0 | HTTP client for crawling and fuzzing |
 | `beautifulsoup4` | ≥ 4.12.0 | HTML parsing for form and link extraction |
 
@@ -300,10 +301,16 @@ xss-toolkit/
 ├── c2_listener.py       # C2 listener — session management, keystroke capture
 ├── models.py            # Data models — ScanResult, Session, Keystroke, DataStore
 ├── payloads.py          # Payload library — 22 curated XSS payloads
+├── auth.py              # User authentication (SQLite + password hashing)
+├── db.py                # Database connection helper
+├── config.py            # Application configuration and environment variables
+├── .env.example         # Template for environment variables
 ├── index.html           # Dashboard frontend — single-page app (6 pages)
 ├── app.js               # Frontend logic — API calls, polling, UI rendering
 ├── style.css            # Stylesheet — dark/light themes, glassmorphism, animations
 ├── requirements.txt     # Python dependencies
+├── requirements-dev.txt # Development dependencies (testing tools)
+├── tests/               # Pytest unit tests (scanner, auth, models)
 └── README.md            # This file
 ```
 

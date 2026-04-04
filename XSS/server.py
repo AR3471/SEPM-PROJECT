@@ -132,45 +132,6 @@ def api_register():
     return jsonify({"user": user}), 201
 
 
-@app.route("/api/auth/verify", methods=["POST"])
-def api_verify():
-    """Verify email code and complete registration."""
-    data = request.get_json(force=True, silent=True) or {}
-    email = data.get("email", "").strip()
-    code = data.get("code", "").strip()
-
-    if not email or not code:
-        return jsonify({"error": "Email and verification code are required"}), 400
-
-    user = auth.verify_code(email, code)
-    if user is None:
-        return jsonify({"error": "Invalid or expired verification code"}), 401
-
-    # Auto-login after verification
-    session.permanent = True
-    session["user_id"] = user["id"]
-    session["username"] = user["username"]
-    return jsonify({"user": user}), 201
-
-
-@app.route("/api/auth/resend", methods=["POST"])
-def api_resend():
-    """Resend verification code."""
-    data = request.get_json(force=True, silent=True) or {}
-    email = data.get("email", "").strip()
-
-    if not email:
-        return jsonify({"error": "Email is required"}), 400
-
-    new_code = auth.resend_code(email)
-    if not new_code:
-        return jsonify({"error": "No pending verification found for this email"}), 404
-
-    sent = auth.send_verification_email(email, new_code)
-    if sent:
-        return jsonify({"status": "code_resent", "message": f"New code sent to {email}"})
-    return jsonify({"error": "Failed to send email"}), 500
-
 
 @app.route("/api/auth/login", methods=["POST"])
 @limiter.limit("10/minute")

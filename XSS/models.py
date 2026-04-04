@@ -6,7 +6,7 @@ import time
 import uuid
 import threading
 
-from auth import _get_conn
+from db import _get_conn
 
 
 class ScanResult:
