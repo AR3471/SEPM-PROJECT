@@ -417,7 +417,7 @@ xss-toolkit/
 
 ## 🛡️ Security Considerations
 
-- **In-memory storage** — All data is stored in-memory and lost on server restart. No database persistence.
+- **SQLite persistence** — Findings and activity data are persisted to SQLite database for durability across server restarts. User authentication data includes encrypted passwords and profile information.
 - **Token authentication** — C2 communications are authenticated via secret tokens.
 - **No TLS by default** — Run behind a reverse proxy (NGINX/Caddy) for HTTPS in production.
 - **Keystroke buffer** — Capped at 500 entries to prevent memory exhaustion.
